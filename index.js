@@ -69,32 +69,6 @@ if (!CLIENT_ID || !CLIENT_SECRET || !PROJECT_ID) {
   console.error(`Please check your environment variables or .env file.`);
   process.exit(1);
 }
-console.log("🔍 Checking for Infisical CLI..."); // 追加
-
-// 3. Infisical CLI がインストールされているか確認し、なければインストール
-const checkCli = spawnSync("infisical", ["--version"], { shell: true });
-if (checkCli.error || checkCli.status !== 0) {
-  console.log("⚠️ Infisical CLI not found. Installing...");
-  // セットアップスクリプトを実行し、インストールがロックされている場合はリトライする
-  const setupScript =
-    "curl -1sLf https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh | sudo -n -E bash";
-  const installCmd =
-    "sudo -n apt-get -o DPkg::Lock::Timeout=60 install -y infisical";
-
-  const installResult = spawnSync(
-    "sh",
-    [
-      "-c",
-      `export DEBIAN_FRONTEND=noninteractive && ${setupScript} && ${installCmd}`,
-    ],
-    { stdio: "inherit", shell: true }
-  );
-
-  if (installResult.status !== 0) {
-    console.error("❌ Failed to install Infisical CLI");
-    process.exit(1);
-  }
-}
 
 // 4. Infisical Login
 const login = spawnSync(
