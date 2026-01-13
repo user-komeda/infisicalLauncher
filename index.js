@@ -47,13 +47,16 @@ if (finalCmd.length === 0) {
   process.exit(1);
 }
 
+// 2. 環境変数のセットアップ
+const fullEnvPath = path.resolve(options.envDir, ".env");
+
+// 既に環境変数(GitHub Actionsのenvなど)がある場合はそれを使用し、なければ.envを読み込む
 if (
   !process.env.CLIENT_ID ||
   !process.env.CLIENT_SECRET ||
   !process.env.PROJECT_ID
 ) {
-  console.log(`🔄 Loading environment variables from: ${options.envDir}`);
-  const fullEnvPath = path.resolve(options.envDir, ".env");
+  console.log(`🔄 Loading environment variables from: ${fullEnvPath}`);
   dotenv.config({ path: fullEnvPath });
 }
 
@@ -61,21 +64,22 @@ const { CLIENT_ID, CLIENT_SECRET, PROJECT_ID } = process.env;
 
 if (!CLIENT_ID || !CLIENT_SECRET || !PROJECT_ID) {
   console.error(
-    `❌ Error: Missing credentials (CLIENT_ID, CLIENT_SECRET, or PROJECT_ID) in: ${fullEnvPath}`
+    `❌ Error: Missing credentials (CLIENT_ID, CLIENT_SECRET, or PROJECT_ID)`
   );
+  console.error(`Please check your environment variables or .env file.`);
   process.exit(1);
 }
 
-// 1.5. Infisical CLI がインストールされているか確認し、なければインストール
-const checkCli = spawnSync("infisical", ["--version"]);
+// 3. Infisical CLI がインストールされているか確認し、なければインストール
+const checkCli = spawnSync("infisical", ["--version"], { shell: true });
 if (checkCli.error || checkCli.status !== 0) {
   console.log("⚠️ Infisical CLI not found. Installing...");
-  // Linux (Ubuntu) 環境を想定したインストールコマンド
+  // Linux (Ubuntu/Debian) 環境用のインストールコマンド
   const installResult = spawnSync(
     "sh",
     [
       "-c",
-      "curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.rpm.sh' | sudo -E bash && sudo dnf install -y infisical",
+      "curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash && sudo apt-get update && sudo apt-get install -y infisical",
     ],
     { stdio: "inherit", shell: true }
   );
@@ -86,7 +90,7 @@ if (checkCli.error || checkCli.status !== 0) {
   }
 }
 
-// 3. Infisical Login
+// 4. Infisical Login
 const login = spawnSync(
   "infisical",
   [
@@ -108,7 +112,7 @@ if (!token || login.status !== 0) {
   process.exit(1);
 }
 
-// 4. 指定されたコマンドを実行
+// 5. 指定されたコマンドを実行
 console.log(`🚀 [Infisical] Path: ${options.path} | Project: ${PROJECT_ID}`);
 console.log(`💻 [Command] ${finalCmd.join(" ")}`);
 
@@ -129,5 +133,5 @@ const child = spawn(
 );
 
 child.on("close", (code) => {
-  process.exit(code);
+  process.exit(code ?? 0);
 });
