@@ -1,27 +1,17 @@
 import { spawnSync, spawn } from "child_process";
 import path from "path";
 import dotenv from "dotenv";
-import { fileURLToPath } from "node:url";
 
-// 1. .env から ID と Secret を読み込み
-// スクリプト自身のディレクトリパスを取得（ルートディレクトリ）
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+/**
+ * Infisical Launcher
+ * GitHub: user-komeda/infisicalLauncher
+ */
 
-// .env のパスを、実行場所ではなくこのスクリプトがある場所（ルート）に固定する
-dotenv.config({ path: path.resolve(__dirname, ".env") });
-const { CLIENT_ID, CLIENT_SECRET, PROJECT_ID } = process.env;
-
-if (!CLIENT_ID || !CLIENT_SECRET || !PROJECT_ID) {
-  console.error(
-    "❌ Error: CLIENT_ID or CLIENT_SECRET or PROJECT_ID is not set in .env"
-  );
-  process.exit(1);
-}
-
-// 2. 引数の解析
+// 1. 引数の解析
 const rawArgs = process.argv.slice(2);
 const options = {
   path: "/",
+  envDir: process.cwd(), // デフォルトは現在の作業ディレクトリ
   cmdArgs: [],
 };
 
@@ -32,15 +22,16 @@ for (let i = 0; i < rawArgs.length; i++) {
 
   if (arg.startsWith("--path=")) {
     options.path = arg.split("=")[1];
+  } else if (arg.startsWith("--envDir=")) {
+    options.envDir = arg.split("=")[1];
   } else if (arg.startsWith("--cmd=")) {
-    // --cmd=docker 形式と、その後に続く引数をすべて回収
+    // --cmd="command" 形式への対応
     options.cmdArgs.push(arg.split("=")[1]);
     isCollectingCmd = true;
   } else if (isCollectingCmd) {
-    // --cmd の後に続く空白区切りの引数をすべて追加
     options.cmdArgs.push(arg);
   } else if (!arg.startsWith("--")) {
-    // 名前付き引数以外で、まだ cmd を収集中でない場合はここからコマンド開始とみなす
+    // オプション以外の引数が現れたら、そこから先をすべてコマンドとみなす
     options.cmdArgs.push(arg);
     isCollectingCmd = true;
   }
@@ -49,13 +40,27 @@ for (let i = 0; i < rawArgs.length; i++) {
 const finalCmd = options.cmdArgs.filter(Boolean);
 
 if (finalCmd.length === 0) {
+  console.error("❌ Error: No command provided.");
   console.error(
-    "❌ Error: No command provided. Usage: node with-infisical.mjs --path=/path docker compose up"
+    "Usage: infisical-launcher [--path=/path] [--envDir=path/to/dir] <command>"
   );
   process.exit(1);
 }
 
-// 3. Infisical Login してトークン取得
+// 2. 指定されたディレクトリから .env を読み込み
+const fullEnvPath = path.resolve(options.envDir, ".env");
+dotenv.config({ path: fullEnvPath });
+
+const { CLIENT_ID, CLIENT_SECRET, PROJECT_ID } = process.env;
+
+if (!CLIENT_ID || !CLIENT_SECRET || !PROJECT_ID) {
+  console.error(
+    `❌ Error: Missing credentials (CLIENT_ID, CLIENT_SECRET, or PROJECT_ID) in: ${fullEnvPath}`
+  );
+  process.exit(1);
+}
+
+// 3. Infisical Login
 const login = spawnSync(
   "infisical",
   [
@@ -78,7 +83,8 @@ if (!token || login.status !== 0) {
 }
 
 // 4. 指定されたコマンドを実行
-console.log(`🚀 Path: ${options.path} | Command: ${finalCmd.join(" ")}`);
+console.log(`🚀 [Infisical] Path: ${options.path} | Project: ${PROJECT_ID}`);
+console.log(`💻 [Command] ${finalCmd.join(" ")}`);
 
 const child = spawn(
   "infisical",
@@ -96,4 +102,6 @@ const child = spawn(
   { stdio: "inherit", shell: true }
 );
 
-child.on("close", (code) => process.exit(code));
+child.on("close", (code) => {
+  process.exit(code);
+});
