@@ -69,6 +69,7 @@ if (!CLIENT_ID || !CLIENT_SECRET || !PROJECT_ID) {
   console.error(`Please check your environment variables or .env file.`);
   process.exit(1);
 }
+console.log("🔍 Checking for Infisical CLI..."); // 追加
 
 // 3. Infisical CLI がインストールされているか確認し、なければインストール
 const checkCli = spawnSync("infisical", ["--version"], { shell: true });
