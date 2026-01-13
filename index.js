@@ -80,7 +80,7 @@ if (checkCli.error || checkCli.status !== 0) {
     "sh",
     [
       "-c",
-      "curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash && until sudo apt-get install -y infisical; do echo 'Waiting for apt lock...'; sleep 1; done",
+      "curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash && sudo NEEDRESTART_MODE=a apt-get -o DPkg::Lock::Timeout=60 install -y infisical",
     ],
     { stdio: "inherit", shell: true }
   );
