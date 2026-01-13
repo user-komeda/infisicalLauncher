@@ -1,0 +1,11 @@
+{
+  "name": "infisicalLauncher",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": {
+    "infisicalLauncher": "./index.js"
+  },
+  "devDependencies": {
+    "dotenv": "^17.2.3"
+  }
+}
