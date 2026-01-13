@@ -67,18 +67,23 @@ if (!CLIENT_ID || !CLIENT_SECRET || !PROJECT_ID) {
 }
 
 // 1.5. Infisical CLI がインストールされているか確認し、なければインストール
-try {
-  spawnSync("infisical", ["--version"], { stdio: "ignore" });
-} catch (e) {
+const checkCli = spawnSync("infisical", ["--version"]);
+if (checkCli.error || checkCli.status !== 0) {
   console.log("⚠️ Infisical CLI not found. Installing...");
-  spawnSync(
+  // Linux (Ubuntu) 環境を想定したインストールコマンド
+  const installResult = spawnSync(
     "sh",
     [
       "-c",
-      "curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.rpm.sh' | sudo -E bash && sudo dnf install -y infisical",
+      "curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash && sudo apt-get update && sudo apt-get install -y infisical",
     ],
-    { stdio: "inherit" }
+    { stdio: "inherit", shell: true }
   );
+
+  if (installResult.status !== 0) {
+    console.error("❌ Failed to install Infisical CLI");
+    process.exit(1);
+  }
 }
 
 // 3. Infisical Login
