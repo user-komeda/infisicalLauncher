@@ -47,9 +47,15 @@ if (finalCmd.length === 0) {
   process.exit(1);
 }
 
-// 2. 指定されたディレクトリから .env を読み込み
-const fullEnvPath = path.resolve(options.envDir, ".env");
-dotenv.config({ path: fullEnvPath });
+if (
+  !process.env.CLIENT_ID ||
+  !process.env.CLIENT_SECRET ||
+  !process.env.PROJECT_ID
+) {
+  console.log(`🔄 Loading environment variables from: ${options.envDir}`);
+  const fullEnvPath = path.resolve(options.envDir, ".env");
+  dotenv.config({ path: fullEnvPath });
+}
 
 const { CLIENT_ID, CLIENT_SECRET, PROJECT_ID } = process.env;
 
