@@ -66,6 +66,21 @@ if (!CLIENT_ID || !CLIENT_SECRET || !PROJECT_ID) {
   process.exit(1);
 }
 
+// 1.5. Infisical CLI がインストールされているか確認し、なければインストール
+try {
+  spawnSync("infisical", ["--version"], { stdio: "ignore" });
+} catch (e) {
+  console.log("⚠️ Infisical CLI not found. Installing...");
+  spawnSync(
+    "sh",
+    [
+      "-c",
+      "curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.rpm.sh' | sudo -E bash && sudo dnf install -y infisical",
+    ],
+    { stdio: "inherit" }
+  );
+}
+
 // 3. Infisical Login
 const login = spawnSync(
   "infisical",
