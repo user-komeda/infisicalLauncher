@@ -75,7 +75,7 @@ if (checkCli.error || checkCli.status !== 0) {
     "sh",
     [
       "-c",
-      "curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash && sudo apt-get update && sudo apt-get install -y infisical",
+      "curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.rpm.sh' | sudo -E bash && sudo dnf install -y infisical",
     ],
     { stdio: "inherit", shell: true }
   );
