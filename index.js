@@ -76,12 +76,14 @@ const checkCli = spawnSync("infisical", ["--version"], { shell: true });
 if (checkCli.error || checkCli.status !== 0) {
   console.log("⚠️ Infisical CLI not found. Installing...");
   // セットアップスクリプトを実行し、インストールがロックされている場合はリトライする
+  const setupScript =
+    "curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash";
+  const installCmd =
+    "sudo apt-get -o DPkg::Lock::Timeout=60 install -y infisical";
+
   const installResult = spawnSync(
     "sh",
-    [
-      "-c",
-      "curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash && sudo NEEDRESTART_MODE=a apt-get -o DPkg::Lock::Timeout=60 install -y infisical",
-    ],
+    ["-c", `${setupScript} && ${installCmd}`],
     { stdio: "inherit", shell: true }
   );
 
