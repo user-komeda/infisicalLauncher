@@ -1,3 +1,5 @@
+#!/usr/bin/env tsx
+
 import { spawnSync, spawn } from "child_process";
 import path from "path";
 import dotenv from "dotenv";
