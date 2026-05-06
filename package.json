@@ -2,10 +2,10 @@
   "name": "infisicalLauncher",
   "version": "1.0.0",
   "type": "module",
-  "bin": {
-    "infisicalLauncher": "./index.js"
+  "bin": "./index.js",
+  "dependencies": {
+    "@infisical/sdk": "^5.0.2",
+    "dotenv": "^17.4.2"
   },
-  "devDependencies": {
-    "dotenv": "^17.2.3"
-  }
+  "packageManager": "yarn@4.14.1"
 }
