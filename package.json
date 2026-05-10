@@ -1,10 +1,12 @@
 {
   "name": "infisicalLauncher",
   "version": "1.0.0",
-  "type": "module",
-  "bin": "./dist/index.js",
+  "type": "commonjs",
+  "bin": {
+    "infisicalLauncher": "./dist/index.cjs"
+  },
   "scripts": {
-    "build": "esbuild index.js --bundle --platform=node --format=esm --outfile=dist/index.js"
+    "build": "esbuild index.js --bundle --platform=node --format=cjs --outfile=dist/index.cjs"
   },
   "dependencies": {
     "@infisical/sdk": "^5.0.2",
