@@ -2,10 +2,16 @@
   "name": "infisicalLauncher",
   "version": "1.0.0",
   "type": "module",
-  "bin": "./index.js",
+  "bin": "./dist/index.js",
+  "scripts": {
+    "build": "esbuild index.js --bundle --platform=node --format=esm --outfile=dist/index.js"
+  },
   "dependencies": {
     "@infisical/sdk": "^5.0.2",
     "dotenv": "^17.4.2"
   },
-  "packageManager": "yarn@4.14.1"
+  "packageManager": "yarn@4.14.1",
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
 }
