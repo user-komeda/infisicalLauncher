@@ -10,11 +10,11 @@
  * Requirements: Node.js >= 20
  */
 
-import {spawn} from "node:child_process";
+import { spawn } from "node:child_process";
 import path from "node:path";
-import {parseArgs} from "node:util";
+import { parseArgs } from "node:util";
 import dotenv from "dotenv";
-import {InfisicalSDK} from "@infisical/sdk";
+import { InfisicalSDK } from "@infisical/sdk";
 
 const REQUIRED_ENV_KEYS = ["CLIENT_ID", "CLIENT_SECRET", "PROJECT_ID"];
 
@@ -64,12 +64,12 @@ Examples:
 // ============================================================
 
 const parseLauncherArgs = (argv) => {
-  const {values, positionals} = parseArgs({
+  const { values, positionals } = parseArgs({
     args: argv,
     options: {
-      path: {type: "string", default: "/"},
-      env: {type: "string", default: "dev"},
-      help: {type: "boolean", short: "h", default: false},
+      path: { type: "string", default: "/" },
+      env: { type: "string", default: "dev" },
+      help: { type: "boolean", short: "h", default: false },
     },
     allowPositionals: true,
     strict: false,
@@ -98,9 +98,7 @@ const parseLauncherArgs = (argv) => {
 // ============================================================
 
 const loadCredentials = async () => {
-  const allPresent = REQUIRED_ENV_KEYS.every(
-    (key) => process.env[key],
-  );
+  const allPresent = REQUIRED_ENV_KEYS.every((key) => process.env[key]);
 
   if (allPresent) {
     return {
@@ -236,7 +234,7 @@ const runCommand = (command, environment, secretPath, injectedEnv) => {
 
 const main = async () => {
   const options = parseLauncherArgs(process.argv.slice(2));
-  const credentials = loadCredentials();
+  const credentials = await loadCredentials();
   const injectedEnv = await fetchSecrets(
     credentials,
     options.environment,
