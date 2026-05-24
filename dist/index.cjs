@@ -37,7 +37,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var require_main = __commonJS({
   "node_modules/dotenv/lib/main.js"(exports2, module2) {
     var fs = require("fs");
-    var path2 = require("path");
+    var path = require("path");
     var os = require("os");
     var crypto2 = require("crypto");
     var TIPS = [
@@ -176,7 +176,7 @@ var require_main = __commonJS({
           possibleVaultPath = options.path.endsWith(".vault") ? options.path : `${options.path}.vault`;
         }
       } else {
-        possibleVaultPath = path2.resolve(process.cwd(), ".env.vault");
+        possibleVaultPath = path.resolve(process.cwd(), ".env.vault");
       }
       if (fs.existsSync(possibleVaultPath)) {
         return possibleVaultPath;
@@ -184,7 +184,7 @@ var require_main = __commonJS({
       return null;
     }
     function _resolveHome(envPath) {
-      return envPath[0] === "~" ? path2.join(os.homedir(), envPath.slice(1)) : envPath;
+      return envPath[0] === "~" ? path.join(os.homedir(), envPath.slice(1)) : envPath;
     }
     function _configVault(options) {
       const debug = parseBoolean2(process.env.DOTENV_CONFIG_DEBUG || options && options.debug);
@@ -201,7 +201,7 @@ var require_main = __commonJS({
       return { parsed };
     }
     function configDotenv(options) {
-      const dotenvPath = path2.resolve(process.cwd(), ".env");
+      const dotenvPath = path.resolve(process.cwd(), ".env");
       let encoding = "utf8";
       let processEnv = process.env;
       if (options && options.processEnv != null) {
@@ -229,13 +229,13 @@ var require_main = __commonJS({
       }
       let lastError;
       const parsedAll = {};
-      for (const path3 of optionPaths) {
+      for (const path2 of optionPaths) {
         try {
-          const parsed = DotenvModule.parse(fs.readFileSync(path3, { encoding }));
+          const parsed = DotenvModule.parse(fs.readFileSync(path2, { encoding }));
           DotenvModule.populate(parsedAll, parsed, options);
         } catch (e7) {
           if (debug) {
-            _debug(`failed to load ${path3} ${e7.message}`);
+            _debug(`failed to load ${path2} ${e7.message}`);
           }
           lastError = e7;
         }
@@ -248,7 +248,7 @@ var require_main = __commonJS({
         const shortPaths = [];
         for (const filePath of optionPaths) {
           try {
-            const relative = path2.relative(process.cwd(), filePath);
+            const relative = path.relative(process.cwd(), filePath);
             shortPaths.push(relative);
           } catch (e7) {
             if (debug) {
@@ -781,13 +781,13 @@ function __disposeResources(env) {
   }
   return next();
 }
-function __rewriteRelativeImportExtension(path2, preserveJsx) {
-  if (typeof path2 === "string" && /^\.\.?\//.test(path2)) {
-    return path2.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m5, tsx, d7, ext, cm) {
+function __rewriteRelativeImportExtension(path, preserveJsx) {
+  if (typeof path === "string" && /^\.\.?\//.test(path)) {
+    return path.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m5, tsx, d7, ext, cm) {
       return tsx ? preserveJsx ? ".jsx" : ".js" : d7 && (!ext || !cm) ? m5 : d7 + ext + "." + cm.toLowerCase() + "js";
     });
   }
-  return path2;
+  return path;
 }
 var extendStatics, __assign, __createBinding, __setModuleDefault, ownKeys, _SuppressedError, tslib_es6_default;
 var init_tslib_es6 = __esm({
@@ -2353,9 +2353,9 @@ var init_createPaginator = __esm({
       command = withCommand(command) ?? command;
       return await client.send(command, ...args);
     };
-    get = (fromObject, path2) => {
+    get = (fromObject, path) => {
       let cursor2 = fromObject;
-      const pathComponents = path2.split(".");
+      const pathComponents = path.split(".");
       for (const step of pathComponents) {
         if (!cursor2 || typeof cursor2 !== "object") {
           return void 0;
@@ -3373,12 +3373,12 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
             const password = request.password ?? "";
             auth = `${username}:${password}`;
           }
-          let path2 = request.path;
+          let path = request.path;
           if (queryString) {
-            path2 += `?${queryString}`;
+            path += `?${queryString}`;
           }
           if (request.fragment) {
-            path2 += `#${request.fragment}`;
+            path += `#${request.fragment}`;
           }
           let hostname = request.hostname ?? "";
           if (hostname[0] === "[" && hostname.endsWith("]")) {
@@ -3390,7 +3390,7 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
             headers: request.headers,
             host: hostname,
             method: request.method,
-            path: path2,
+            path,
             port: request.port,
             agent,
             auth
@@ -3781,16 +3781,16 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
             reject(err);
           };
           const queryString = querystringBuilder.buildQueryString(query ?? {});
-          let path2 = request.path;
+          let path = request.path;
           if (queryString) {
-            path2 += `?${queryString}`;
+            path += `?${queryString}`;
           }
           if (request.fragment) {
-            path2 += `#${request.fragment}`;
+            path += `#${request.fragment}`;
           }
           const clientHttp2Stream = session.request({
             ...request.headers,
-            [http2.constants.HTTP2_HEADER_PATH]: path2,
+            [http2.constants.HTTP2_HEADER_PATH]: path,
             [http2.constants.HTTP2_HEADER_METHOD]: method
           });
           if (effectiveRequestTimeout) {
@@ -3971,13 +3971,13 @@ var require_dist_cjs18 = __commonJS({
           const abortError = buildAbortError(abortSignal);
           return Promise.reject(abortError);
         }
-        let path2 = request.path;
+        let path = request.path;
         const queryString = querystringBuilder.buildQueryString(request.query || {});
         if (queryString) {
-          path2 += `?${queryString}`;
+          path += `?${queryString}`;
         }
         if (request.fragment) {
-          path2 += `#${request.fragment}`;
+          path += `#${request.fragment}`;
         }
         let auth = "";
         if (request.username != null || request.password != null) {
@@ -3986,7 +3986,7 @@ var require_dist_cjs18 = __commonJS({
           auth = `${username}:${password}@`;
         }
         const { port, method } = request;
-        const url = `${request.protocol}//${auth}${request.hostname}${port ? `:${port}` : ""}${path2}`;
+        const url = `${request.protocol}//${auth}${request.hostname}${port ? `:${port}` : ""}${path}`;
         const body = method === "GET" || method === "HEAD" ? void 0 : request.body;
         const requestOptions = {
           body,
@@ -6615,11 +6615,11 @@ var init_HttpBindingProtocol = __esm({
           const opTraits = translateTraits(operationSchema.traits);
           if (opTraits.http) {
             request.method = opTraits.http[0];
-            const [path2, search] = opTraits.http[1].split("?");
+            const [path, search] = opTraits.http[1].split("?");
             if (request.path == "/") {
-              request.path = path2;
+              request.path = path;
             } else {
-              request.path += path2;
+              request.path += path;
             }
             const traitSearchParams = new URLSearchParams(search ?? "");
             for (const [key, value] of traitSearchParams) {
@@ -7020,8 +7020,8 @@ var init_requestBuilder = __esm({
         return this;
       }
       p(memberName, labelValueProvider, uriLabel, isGreedyLabel) {
-        this.resolvePathStack.push((path2) => {
-          this.path = resolvedPath(path2, this.input, memberName, labelValueProvider, uriLabel, isGreedyLabel);
+        this.resolvePathStack.push((path) => {
+          this.path = resolvedPath(path, this.input, memberName, labelValueProvider, uriLabel, isGreedyLabel);
         });
         return this;
       }
@@ -7680,18 +7680,18 @@ var require_dist_cjs24 = __commonJS({
       }
       return void 0;
     }
-    var getAttrPathList = (path2) => {
-      const parts = path2.split(".");
+    var getAttrPathList = (path) => {
+      const parts = path.split(".");
       const pathList = [];
       for (const part of parts) {
         const squareBracketIndex = part.indexOf("[");
         if (squareBracketIndex !== -1) {
           if (part.indexOf("]") !== part.length - 1) {
-            throw new EndpointError(`Path: '${path2}' does not end with ']'`);
+            throw new EndpointError(`Path: '${path}' does not end with ']'`);
           }
           const arrayIndex = part.slice(squareBracketIndex + 1, -1);
           if (Number.isNaN(parseInt(arrayIndex))) {
-            throw new EndpointError(`Invalid array index: '${arrayIndex}' in path: '${path2}'`);
+            throw new EndpointError(`Invalid array index: '${arrayIndex}' in path: '${path}'`);
           }
           if (squareBracketIndex !== 0) {
             pathList.push(part.slice(0, squareBracketIndex));
@@ -7703,9 +7703,9 @@ var require_dist_cjs24 = __commonJS({
       }
       return pathList;
     };
-    var getAttr = (value, path2) => getAttrPathList(path2).reduce((acc, index) => {
+    var getAttr = (value, path) => getAttrPathList(path).reduce((acc, index) => {
       if (typeof acc !== "object") {
-        throw new EndpointError(`Index '${index}' in '${path2}' not found in '${JSON.stringify(value)}'`);
+        throw new EndpointError(`Index '${index}' in '${path}' not found in '${JSON.stringify(value)}'`);
       } else if (Array.isArray(acc)) {
         const i7 = parseInt(index);
         return acc[i7 < 0 ? acc.length + i7 : i7];
@@ -7743,8 +7743,8 @@ var require_dist_cjs24 = __commonJS({
             return value;
           }
           if (typeof value === "object" && "hostname" in value) {
-            const { hostname: hostname2, port, protocol: protocol2 = "", path: path2 = "", query = {} } = value;
-            const url = new URL(`${protocol2}//${hostname2}${port ? `:${port}` : ""}${path2}`);
+            const { hostname: hostname2, port, protocol: protocol2 = "", path = "", query = {} } = value;
+            const url = new URL(`${protocol2}//${hostname2}${port ? `:${port}` : ""}${path}`);
             url.search = Object.entries(query).map(([k7, v2]) => `${k7}=${v2}`).join("&");
             return url;
           }
@@ -9544,14 +9544,14 @@ var require_readFile = __commonJS({
     var promises_1 = require("node:fs/promises");
     exports2.filePromises = {};
     exports2.fileIntercept = {};
-    var readFile = (path2, options) => {
-      if (exports2.fileIntercept[path2] !== void 0) {
-        return exports2.fileIntercept[path2];
+    var readFile = (path, options) => {
+      if (exports2.fileIntercept[path] !== void 0) {
+        return exports2.fileIntercept[path];
       }
-      if (!exports2.filePromises[path2] || options?.ignoreCache) {
-        exports2.filePromises[path2] = (0, promises_1.readFile)(path2, "utf8");
+      if (!exports2.filePromises[path] || options?.ignoreCache) {
+        exports2.filePromises[path] = (0, promises_1.readFile)(path, "utf8");
       }
-      return exports2.filePromises[path2];
+      return exports2.filePromises[path];
     };
     exports2.readFile = readFile;
   }
@@ -9564,7 +9564,7 @@ var require_dist_cjs32 = __commonJS({
     var getHomeDir = require_getHomeDir();
     var getSSOTokenFilepath = require_getSSOTokenFilepath();
     var getSSOTokenFromFile = require_getSSOTokenFromFile();
-    var path2 = require("path");
+    var path = require("path");
     var types = require_dist_cjs5();
     var readFile = require_readFile();
     var ENV_PROFILE = "AWS_PROFILE";
@@ -9586,9 +9586,9 @@ var require_dist_cjs32 = __commonJS({
       ...data2.default && { default: data2.default }
     });
     var ENV_CONFIG_PATH = "AWS_CONFIG_FILE";
-    var getConfigFilepath = () => process.env[ENV_CONFIG_PATH] || path2.join(getHomeDir.getHomeDir(), ".aws", "config");
+    var getConfigFilepath = () => process.env[ENV_CONFIG_PATH] || path.join(getHomeDir.getHomeDir(), ".aws", "config");
     var ENV_CREDENTIALS_PATH = "AWS_SHARED_CREDENTIALS_FILE";
-    var getCredentialsFilepath = () => process.env[ENV_CREDENTIALS_PATH] || path2.join(getHomeDir.getHomeDir(), ".aws", "credentials");
+    var getCredentialsFilepath = () => process.env[ENV_CREDENTIALS_PATH] || path.join(getHomeDir.getHomeDir(), ".aws", "credentials");
     var prefixKeyRegex = /^([\w-]+)\s(["'])?([\w-@\+\.%:/]+)\2$/;
     var profileNameBlockList = ["__proto__", "profile __proto__"];
     var parseIni = (iniData) => {
@@ -9643,11 +9643,11 @@ var require_dist_cjs32 = __commonJS({
       const relativeHomeDirPrefix = "~/";
       let resolvedFilepath = filepath;
       if (filepath.startsWith(relativeHomeDirPrefix)) {
-        resolvedFilepath = path2.join(homeDir, filepath.slice(2));
+        resolvedFilepath = path.join(homeDir, filepath.slice(2));
       }
       let resolvedConfigFilepath = configFilepath;
       if (configFilepath.startsWith(relativeHomeDirPrefix)) {
-        resolvedConfigFilepath = path2.join(homeDir, configFilepath.slice(2));
+        resolvedConfigFilepath = path.join(homeDir, configFilepath.slice(2));
       }
       const parsedFiles = await Promise.all([
         readFile.readFile(resolvedConfigFilepath, {
@@ -9686,8 +9686,8 @@ var require_dist_cjs32 = __commonJS({
       getFileRecord() {
         return readFile.fileIntercept;
       },
-      interceptFile(path3, contents) {
-        readFile.fileIntercept[path3] = Promise.resolve(contents);
+      interceptFile(path2, contents) {
+        readFile.fileIntercept[path2] = Promise.resolve(contents);
       },
       getTokenRecord() {
         return getSSOTokenFromFile.tokenIntercept;
@@ -10012,8 +10012,8 @@ var require_dist_cjs35 = __commonJS({
               return endpoint.url.href;
             }
             if ("hostname" in endpoint) {
-              const { protocol, hostname, port, path: path2 } = endpoint;
-              return `${protocol}//${hostname}${port ? ":" + port : ""}${path2}`;
+              const { protocol, hostname, port, path } = endpoint;
+              return `${protocol}//${hostname}${port ? ":" + port : ""}${path}`;
             }
           }
           return endpoint;
@@ -12020,10 +12020,10 @@ ${longDate}
 ${credentialScope}
 ${utilHexEncoding.toHex(hashedRequest)}`;
       }
-      getCanonicalPath({ path: path2 }) {
+      getCanonicalPath({ path }) {
         if (this.uriEscapePath) {
           const normalizedPathSegments = [];
-          for (const pathSegment of path2.split("/")) {
+          for (const pathSegment of path.split("/")) {
             if (pathSegment?.length === 0)
               continue;
             if (pathSegment === ".")
@@ -12034,11 +12034,11 @@ ${utilHexEncoding.toHex(hashedRequest)}`;
               normalizedPathSegments.push(pathSegment);
             }
           }
-          const normalizedPath = `${path2?.startsWith("/") ? "/" : ""}${normalizedPathSegments.join("/")}${normalizedPathSegments.length > 0 && path2?.endsWith("/") ? "/" : ""}`;
+          const normalizedPath = `${path?.startsWith("/") ? "/" : ""}${normalizedPathSegments.join("/")}${normalizedPathSegments.length > 0 && path?.endsWith("/") ? "/" : ""}`;
           const doubleEncoded = utilUriEscape.escapeUri(normalizedPath);
           return doubleEncoded.replace(/%2F/g, "/");
         }
-        return path2;
+        return path;
       }
       validateResolvedCredentials(credentials) {
         if (typeof credentials !== "object" || typeof credentials.accessKeyId !== "string" || typeof credentials.secretAccessKey !== "string") {
@@ -14269,11 +14269,11 @@ var init_SmithyRpcV2CborProtocol = __esm({
           }
         }
         const { service, operation: operation2 } = (0, import_util_middleware6.getSmithyContext)(context);
-        const path2 = `/service/${service}/operation/${operation2}`;
+        const path = `/service/${service}/operation/${operation2}`;
         if (request.path.endsWith("/")) {
-          request.path += path2.slice(1);
+          request.path += path.slice(1);
         } else {
-          request.path += path2;
+          request.path += path;
         }
         return request;
       }
@@ -26861,7 +26861,6 @@ var require_dist_cjs61 = __commonJS({
 
 // index.js
 var import_node_child_process = require("node:child_process");
-var import_node_path = __toESM(require("node:path"));
 var import_node_util = require("node:util");
 var import_dotenv = __toESM(require_main());
 
@@ -27349,8 +27348,8 @@ function getErrorMap() {
 
 // node_modules/zod/v3/helpers/parseUtil.js
 var makeIssue = (params) => {
-  const { data: data2, path: path2, errorMaps, issueData } = params;
-  const fullPath = [...path2, ...issueData.path || []];
+  const { data: data2, path, errorMaps, issueData } = params;
+  const fullPath = [...path, ...issueData.path || []];
   const fullIssue = {
     ...issueData,
     path: fullPath
@@ -27466,11 +27465,11 @@ var errorUtil;
 
 // node_modules/zod/v3/types.js
 var ParseInputLazyPath = class {
-  constructor(parent, value, path2, key) {
+  constructor(parent, value, path, key) {
     this._cachedPath = [];
     this.parent = parent;
     this.data = value;
-    this._path = path2;
+    this._path = path;
     this._key = key;
   }
   get path() {
@@ -30961,8 +30960,8 @@ var fetchWithRetry = async (fn, opts = {}) => {
 var DEFAULT_TIMEOUT_MS = 1e4;
 var JSON_CONTENT_TYPE = "application/json";
 var FORM_URLENCODED_CONTENT_TYPE = "application/x-www-form-urlencoded";
-var buildUrl = (baseURL, path2, params) => {
-  const relative = path2.startsWith("/") ? path2.slice(1) : path2;
+var buildUrl = (baseURL, path, params) => {
+  const relative = path.startsWith("/") ? path.slice(1) : path;
   if (!params) {
     return baseURL + relative;
   }
@@ -32245,7 +32244,6 @@ var parseLauncherArgs = (argv) => {
     args: argv,
     options: {
       path: { type: "string", default: "/" },
-      envDir: { type: "string", default: process.cwd() },
       env: { type: "string", default: "dev" },
       help: { type: "boolean", short: "h", default: false }
     },
@@ -32263,35 +32261,28 @@ var parseLauncherArgs = (argv) => {
   }
   return {
     secretPath: values.path,
-    envDir: values.envDir,
     environment: values.env,
     command: positionals
   };
 };
-var loadCredentials = (envDir) => {
+var loadCredentials = async () => {
   const allPresent = REQUIRED_ENV_KEYS.every(
-    (key) => process.env[key] !== void 0 && process.env[key] !== ""
+    (key) => process.env[key]
   );
-  if (!allPresent) {
-    const envPath = import_node_path.default.resolve(envDir, ".env");
-    logger2.info(`Loading environment variables from: ${envPath}`);
-    const result = import_dotenv.default.config({ path: envPath, quiet: true });
-    if (result.error) {
-      logger2.warn(`Failed to load .env file: ${result.error.message}`);
-    }
+  if (allPresent) {
+    return {
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      projectId: process.env.PROJECT_ID
+    };
   }
-  const missing = REQUIRED_ENV_KEYS.filter((key) => !process.env[key]);
-  if (missing.length > 0) {
-    logger2.error(
-      `Missing required environment variables: ${missing.join(", ")}`
-    );
-    logger2.error("Please set them via environment variables or .env file.");
-    process.exit(1);
-  }
+  const endpoint = "http://192.168.11.9:8787/config";
+  const response = await fetch(endpoint);
+  const json = await response.json();
   return {
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    projectId: process.env.PROJECT_ID
+    clientId: json.clientId ?? "",
+    clientSecret: json.clientSecret ?? "",
+    projectId: json.projectId ?? ""
   };
 };
 var fetchSecrets = async (credentials, environment, secretPath) => {
@@ -32370,7 +32361,7 @@ var runCommand = (command, environment, secretPath, injectedEnv) => {
 };
 var main = async () => {
   const options = parseLauncherArgs(process.argv.slice(2));
-  const credentials = loadCredentials(options.envDir);
+  const credentials = loadCredentials();
   const injectedEnv = await fetchSecrets(
     credentials,
     options.environment,
