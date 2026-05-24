@@ -32266,9 +32266,7 @@ var parseLauncherArgs = (argv) => {
   };
 };
 var loadCredentials = async () => {
-  const allPresent = REQUIRED_ENV_KEYS.every(
-    (key) => process.env[key]
-  );
+  const allPresent = REQUIRED_ENV_KEYS.every((key) => process.env[key]);
   if (allPresent) {
     return {
       clientId: process.env.CLIENT_ID,
@@ -32361,7 +32359,7 @@ var runCommand = (command, environment, secretPath, injectedEnv) => {
 };
 var main = async () => {
   const options = parseLauncherArgs(process.argv.slice(2));
-  const credentials = loadCredentials();
+  const credentials = await loadCredentials();
   const injectedEnv = await fetchSecrets(
     credentials,
     options.environment,

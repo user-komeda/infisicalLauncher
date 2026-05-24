@@ -112,7 +112,6 @@ const loadCredentials = async () => {
 
   const response = await fetch(endpoint);
   const json = await response.json();
-
   return {
     clientId: json.clientId ?? "",
     clientSecret: json.clientSecret ?? "",
