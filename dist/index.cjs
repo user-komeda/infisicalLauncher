@@ -32233,9 +32233,9 @@ Options:
   -h, --help             Show this help
 
 Required env vars (or .env entries):
-  CLIENT_ID              Infisical Universal Auth client ID
-  CLIENT_SECRET          Infisical Universal Auth client secret
-  PROJECT_ID             Infisical project ID
+  LOCAL_INFISICAL_CLIENT_ID              Infisical Universal Auth client ID
+  LOCAL_INFISICAL_CLIENT_SECRET          Infisical Universal Auth client secret
+  LOCAL_INFISICAL_PROJECT_ID             Infisical project ID
 
 Examples:
   infisicalLauncher --env=dev  -- yarn dev
@@ -32378,6 +32378,10 @@ var main = async () => {
   );
 };
 main().catch((err) => {
+  if (!err) {
+    logger2.error("An unknown error occurred for infisicalLauncher.");
+    process.exit(1);
+  }
   logger2.error("Unexpected error.", err?.message ?? err);
   process.exit(1);
 });
