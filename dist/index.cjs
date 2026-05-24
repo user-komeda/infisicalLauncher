@@ -32207,7 +32207,11 @@ var InfisicalSDK = class {
 };
 
 // index.js
-var REQUIRED_ENV_KEYS = ["CLIENT_ID", "CLIENT_SECRET", "PROJECT_ID"];
+var REQUIRED_ENV_KEYS = [
+  "LOCAL_INFISICAL_CLIENT_ID",
+  "LOCAL_INFISICAL_CLIENT_SECRET",
+  "LOCAL_INFISICAL_PROJECT_ID"
+];
 var logger2 = {
   info: (msg) => console.log(`\u2139\uFE0F  ${msg}`),
   warn: (msg) => console.warn(`\u26A0\uFE0F  ${msg}`),
@@ -32269,7 +32273,7 @@ var loadCredentials = async () => {
   const allPresent = REQUIRED_ENV_KEYS.every((key) => process.env[key]);
   if (allPresent) {
     return {
-      clientId: process.env.LOCAL_INFISICAL_PROJECT_ID,
+      clientId: process.env.LOCAL_INFISICAL_CLIENT_ID,
       clientSecret: process.env.LOCAL_INFISICAL_CLIENT_SECRET,
       projectId: process.env.LOCAL_INFISICAL_PROJECT_ID
     };

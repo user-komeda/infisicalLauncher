@@ -16,7 +16,11 @@ import { parseArgs } from "node:util";
 import dotenv from "dotenv";
 import { InfisicalSDK } from "@infisical/sdk";
 
-const REQUIRED_ENV_KEYS = ["CLIENT_ID", "CLIENT_SECRET", "PROJECT_ID"];
+const REQUIRED_ENV_KEYS = [
+  "LOCAL_INFISICAL_CLIENT_ID",
+  "LOCAL_INFISICAL_CLIENT_SECRET",
+  "LOCAL_INFISICAL_PROJECT_ID",
+];
 
 // ============================================================
 // ロガー
@@ -102,7 +106,7 @@ const loadCredentials = async () => {
 
   if (allPresent) {
     return {
-      clientId: process.env.LOCAL_INFISICAL_PROJECT_ID,
+      clientId: process.env.LOCAL_INFISICAL_CLIENT_ID,
       clientSecret: process.env.LOCAL_INFISICAL_CLIENT_SECRET,
       projectId: process.env.LOCAL_INFISICAL_PROJECT_ID,
     };
