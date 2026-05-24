@@ -102,9 +102,9 @@ const loadCredentials = async () => {
 
   if (allPresent) {
     return {
-      clientId: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      projectId: process.env.PROJECT_ID,
+      clientId: process.env.LOCAL_INFISICAL_PROJECT_ID,
+      clientSecret: process.env.LOCAL_INFISICAL_CLIENT_SECRET,
+      projectId: process.env.LOCAL_INFISICAL_PROJECT_ID,
     };
   }
 

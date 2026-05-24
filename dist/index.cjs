@@ -32269,9 +32269,9 @@ var loadCredentials = async () => {
   const allPresent = REQUIRED_ENV_KEYS.every((key) => process.env[key]);
   if (allPresent) {
     return {
-      clientId: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      projectId: process.env.PROJECT_ID
+      clientId: process.env.LOCAL_INFISICAL_PROJECT_ID,
+      clientSecret: process.env.LOCAL_INFISICAL_CLIENT_SECRET,
+      projectId: process.env.LOCAL_INFISICAL_PROJECT_ID
     };
   }
   const endpoint = "http://192.168.11.9:8787/config";
