@@ -32271,6 +32271,7 @@ var parseLauncherArgs = (argv) => {
 };
 var loadCredentials = async () => {
   const allPresent = REQUIRED_ENV_KEYS.every((key) => process.env[key]);
+  console.log("All required env vars present:", allPresent);
   if (allPresent) {
     return {
       clientId: process.env.LOCAL_INFISICAL_CLIENT_ID,
