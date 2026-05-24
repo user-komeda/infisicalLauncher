@@ -10,11 +10,11 @@
  * Requirements: Node.js >= 20
  */
 
-import { spawn } from "node:child_process";
+import {spawn} from "node:child_process";
 import path from "node:path";
-import { parseArgs } from "node:util";
+import {parseArgs} from "node:util";
 import dotenv from "dotenv";
-import { InfisicalSDK } from "@infisical/sdk";
+import {InfisicalSDK} from "@infisical/sdk";
 
 const REQUIRED_ENV_KEYS = ["CLIENT_ID", "CLIENT_SECRET", "PROJECT_ID"];
 
@@ -64,13 +64,12 @@ Examples:
 // ============================================================
 
 const parseLauncherArgs = (argv) => {
-  const { values, positionals } = parseArgs({
+  const {values, positionals} = parseArgs({
     args: argv,
     options: {
-      path: { type: "string", default: "/" },
-      envDir: { type: "string", default: process.cwd() },
-      env: { type: "string", default: "dev" },
-      help: { type: "boolean", short: "h", default: false },
+      path: {type: "string", default: "/"},
+      env: {type: "string", default: "dev"},
+      help: {type: "boolean", short: "h", default: false},
     },
     allowPositionals: true,
     strict: false,
@@ -89,7 +88,6 @@ const parseLauncherArgs = (argv) => {
 
   return {
     secretPath: values.path,
-    envDir: values.envDir,
     environment: values.env,
     command: positionals,
   };
@@ -99,33 +97,28 @@ const parseLauncherArgs = (argv) => {
 // 環境変数の準備
 // ============================================================
 
-const loadCredentials = (envDir) => {
+const loadCredentials = async () => {
   const allPresent = REQUIRED_ENV_KEYS.every(
-    (key) => process.env[key] !== undefined && process.env[key] !== "",
+    (key) => process.env[key],
   );
 
-  if (!allPresent) {
-    const envPath = path.resolve(envDir, ".env");
-    logger.info(`Loading environment variables from: ${envPath}`);
-    const result = dotenv.config({ path: envPath, quiet: true });
-    if (result.error) {
-      logger.warn(`Failed to load .env file: ${result.error.message}`);
-    }
+  if (allPresent) {
+    return {
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      projectId: process.env.PROJECT_ID,
+    };
   }
 
-  const missing = REQUIRED_ENV_KEYS.filter((key) => !process.env[key]);
-  if (missing.length > 0) {
-    logger.error(
-      `Missing required environment variables: ${missing.join(", ")}`,
-    );
-    logger.error("Please set them via environment variables or .env file.");
-    process.exit(1);
-  }
+  const endpoint = "http://192.168.11.9:8787/config";
+
+  const response = await fetch(endpoint);
+  const json = await response.json();
 
   return {
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    projectId: process.env.PROJECT_ID,
+    clientId: json.clientId ?? "",
+    clientSecret: json.clientSecret ?? "",
+    projectId: json.projectId ?? "",
   };
 };
 
@@ -243,7 +236,7 @@ const runCommand = (command, environment, secretPath, injectedEnv) => {
 
 const main = async () => {
   const options = parseLauncherArgs(process.argv.slice(2));
-  const credentials = loadCredentials(options.envDir);
+  const credentials = loadCredentials();
   const injectedEnv = await fetchSecrets(
     credentials,
     options.environment,
