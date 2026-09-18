@@ -10,7 +10,7 @@
  * Requirements: Node.js >= 20
  */
 
-import { spawn } from "node:child_process";
+import spawn from "cross-spawn";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import dotenv from "dotenv";
@@ -199,7 +199,6 @@ const runCommand = (command, environment, secretPath, injectedEnv) => {
 
   const child = spawn(bin, args, {
     stdio: "inherit",
-    shell: false,
     env: {
       ...process.env,
       ...injectedEnv,
