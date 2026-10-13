@@ -9,7 +9,7 @@
   "dependencies": {
     "@infisical/sdk": "^5.0.2",
     "cross-spawn": "^7.0.6",
-    "dotenv": "^17.4.2"
+    "dotenv": "^18.0.0"
   },
   "packageManager": "yarn@4.18.0",
   "devDependencies": {
